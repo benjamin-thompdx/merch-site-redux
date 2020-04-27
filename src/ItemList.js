@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 function ItemList(props){
   return (
   <React.Fragment>
-      {props.itemList.map((item) => 
-        <Item 
+      {Object.values(props.itemList).map((item) => {
+        return <Item 
           whenItemClicked = {props.onItemSelection}
           whenBuyClicked = {props.onClickingBuy}
           whenRestockClicked={props.onClickingRestock}
@@ -15,13 +15,13 @@ function ItemList(props){
           quantity={item.quantity}
           id={item.id}
           key={item.id}/>
-      )}
+      })}
     </React.Fragment>
   );
 }
 
 ItemList.propTypes = {
-  itemList: PropTypes.array,
+  itemList: PropTypes.object,
   onItemSelection: PropTypes.func,
   onClickingRestock: PropTypes.func
 };
