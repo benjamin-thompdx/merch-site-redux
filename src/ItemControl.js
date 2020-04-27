@@ -3,6 +3,7 @@ import NewItemForm from './NewItemForm.js';
 import ItemList from './ItemList.js';
 import ItemDetail from './ItemDetail';
 import EditItemForm from './EditItemForm';
+import { connect } from 'react-redux';
 
 class ItemControl extends React.Component {
 
@@ -10,7 +11,6 @@ class ItemControl extends React.Component {
     super(props);
     this.state = {
       formVisibleOnPage: false,
-      masterItemList: [],
       selectedItem: null,
       editing: false
     };
@@ -36,12 +36,17 @@ class ItemControl extends React.Component {
   }
 
   handleEditingItemInList = (itemToEdit) => {
-    console.log("reached handle editing item in list");
-    const editedMasterItemList = this.state.masterItemList
-      .filter(item => item.id !== this.state.selectedItem.id)
-      .concat(itemToEdit);
+    const { dispatch } = this.props;
+    const { id, name, description, quantity } = itemToEdit;
+    const action = {
+      type: 'ADD_ITEM',
+      id: id,
+      name: name,
+      description: description,
+      quantity: quantity
+    }
+    dispatch(action);
     this.setState({
-      masterItemList: editedMasterItemList,
       editing: false,
       selectedItem: null
     });
@@ -70,9 +75,13 @@ class ItemControl extends React.Component {
   }
 
   handleDeletingItem = (id) => {
-    const newMasterItemList = this.state.masterItemList.filter(item => item.id !== id);
+    const { dispatch } = this.props;
+    const action = {
+      type: 'DELETE_ITEM',
+      id: id
+    }
+    dispatch(action);
     this.setState({
-      masterItemList: newMasterItemList,
       selectedItem: null
     });
   }
@@ -83,11 +92,17 @@ class ItemControl extends React.Component {
   }
 
   handleAddingNewItemToList = (newItem) => {
-    const newMasterItemList = this.state.masterItemList.concat(newItem);
-    this.setState({
-      masterItemList: newMasterItemList,
-      formVisibleOnPage: false
-    });
+    const {dispatch } = this.props;
+    const { name, description, quantity, id } = (newItem);
+    const action = {
+      type: 'ADD_ITEM',
+      id: id,
+      name: name,
+      description: description,
+      quantity: quantity
+    }
+    dispatch(action);
+    this.setState({ formVisibleOnPage: false});
   }
 
   render(){
@@ -140,5 +155,17 @@ class ItemControl extends React.Component {
     );
   }
 }
+
+ItemControl.propTypes = {
+  masterItemList: PropTypes.object
+};
+
+const mapStateToProps = state => {
+  return {
+    masterItemList: state
+  }
+}
+
+ItemControl = connect(mapStateToProps)(ItemControl);
 
 export default ItemControl;
