@@ -4,6 +4,7 @@ import ItemList from './ItemList.js';
 import ItemDetail from './ItemDetail';
 import EditItemForm from './EditItemForm';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class ItemControl extends React.Component {
 
@@ -87,7 +88,7 @@ class ItemControl extends React.Component {
   }
 
   handleChangingSelectedItem = (id) => {
-    const selectedItem = this.state.masterItemList.filter(item => item.id === id)[0];
+    const selectedItem = this.props.masterItemList[id];
     this.setState({selectedItem: selectedItem}); 
   }
 
@@ -134,7 +135,7 @@ class ItemControl extends React.Component {
       buttonText = "return to items";
     } else {
       currentlyVisibleState = <ItemList 
-        itemList={this.state.masterItemList} 
+        itemList={this.props.masterItemList} 
         onItemSelection={this.handleChangingSelectedItem}
         onClickingBuy={this.handleItemPurchase}
         onClickingRestock={this.handleItemRestock} />
@@ -155,6 +156,7 @@ class ItemControl extends React.Component {
     );
   }
 }
+
 
 ItemControl.propTypes = {
   masterItemList: PropTypes.object
